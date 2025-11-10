@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL") // cadena de Neon/Supabase con sslmode=require
+  provider = "sqlite"
+  url      = env("DATABASE_URL") // default: file:./dev.db
 }
 
 model Sucursal {
@@ -86,7 +86,7 @@ model Articulo {
   descripcion     String?
   id_marca        Int
   id_departamento Int
-  id_subcategoria Int?         // <-- relación pedida
+  id_subcategoria Int        
   fecha_creacion  DateTime     @default(now())
   activo          Boolean      @default(true)
 
