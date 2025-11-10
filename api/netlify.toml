@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+  publish = "apps/web/build"
+
+[functions]
+  directory = "."
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client"]
+  included_files = ["prisma/**", "node_modules/.prisma/**"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200

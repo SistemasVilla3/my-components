@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // cadena de Neon/Supabase con sslmode=require
+}
+
+model Sucursal {
+  id_sucursal Int       @id @default(autoincrement())
+  nombre      String
+  direccion   String?
+  telefono    String?
+  ciudad      String?
+  activo      Boolean   @default(true)
+  Almacen     Almacen[]
+}
+
+model Almacen {
+  id_almacen           Int                    @id @default(autoincrement())
+  nombre               String
+  id_sucursal          Int
+  activo               Boolean                @default(true)
+  Sucursal             Sucursal               @relation(fields: [id_sucursal], references: [id_sucursal])
+  Almacen_Departamento Almacen_Departamento[]
+  @@index([id_sucursal])
+}
+
+model Departamento {
+  id_departamento      Int                    @id @default(autoincrement())
+  nombre               String                 @unique
+  activo               Boolean                @default(true)
+  Almacen_Departamento Almacen_Departamento[]
+  Articulo             Articulo[]
+  Departamento_Marca   Departamento_Marca[]
+}
+
+model Almacen_Departamento {
+  id_almacen      Int
+  id_departamento Int
+  activo          Boolean      @default(true)
+  Almacen         Almacen      @relation(fields: [id_almacen], references: [id_almacen])
+  Departamento    Departamento @relation(fields: [id_departamento], references: [id_departamento])
+
+  @@id([id_almacen, id_departamento])
+  @@index([id_departamento])
+}
+
+model Marca {
+  id_marca           Int                  @id @default(autoincrement())
+  nombre             String               @unique
+  activo             Boolean              @default(true)
+  codigo             Int?
+  Articulo           Articulo[]
+  Departamento_Marca Departamento_Marca[]
+  SubCategoria       SubCategoria[]
+}
+
+model Departamento_Marca {
+  IdMarcaDepartamento Int          @id @default(autoincrement())
+  id_departamento     Int
+  id_marca            Int
+  activo              Boolean      @default(true)
+  Departamento        Departamento @relation(fields: [id_departamento], references: [id_departamento])
+  Marca               Marca        @relation(fields: [id_marca], references: [id_marca])
+
+  @@index([id_marca])
+}
+
+model SubCategoria {
+  id_subcategoria     Int    @id @default(autoincrement())
+  nombre              String
+  id_marca            Int
+  activo              Boolean @default(true)
+  Marca               Marca   @relation(fields: [id_marca], references: [id_marca])
+  Articulos           Articulo[]
+
+  @@index([id_marca])
+  @@unique([nombre, id_marca]) // evita duplicados por marca
+}
+
+model Articulo {
+  id_articulo     Int          @id @default(autoincrement())
+  sku             String       @unique
+  descripcion     String?
+  id_marca        Int
+  id_departamento Int
+  id_subcategoria Int?         // <-- relación pedida
+  fecha_creacion  DateTime     @default(now())
+  activo          Boolean      @default(true)
+
+  Departamento    Departamento @relation(fields: [id_departamento], references: [id_departamento])
+  Marca           Marca        @relation(fields: [id_marca], references: [id_marca])
+  SubCategoria    SubCategoria @relation(fields: [id_subcategoria], references: [id_subcategoria])
+
+  Detalle_Conteo  Detalle_Conteo[]
+  Ubicacion       Ubicacion[]
+
+  @@index([id_departamento])
+  @@index([id_marca])
+  @@index([id_subcategoria])
+}
+
+model Programacion_Conteo {
+  id_programacion    Int              @id @default(autoincrement())
+  fecha_programada   DateTime
+  descripcion        String?
+  estado             String           @default("Programado")
+  fecha_creacion     DateTime         @default(now())
+  fecha_finalizacion DateTime?
+  Detalle_Conteo     Detalle_Conteo[]
+}
+
+model Detalle_Conteo {
+  id_detalle          Int                 @id @default(autoincrement())
+  id_programacion     Int
+  id_articulo         Int
+  id_ubicacion        Int
+  cantidad_sistema    Int
+  cantidad_contada    Int
+  diferencia          Int?
+  id_usuario_conteo   Int?
+  fecha_conteo        DateTime            @default(now())
+  observaciones       String?
+  Articulo            Articulo            @relation(fields: [id_articulo], references: [id_articulo])
+  Programacion_Conteo Programacion_Conteo @relation(fields: [id_programacion], references: [id_programacion])
+  Ubicacion           Ubicacion           @relation(fields: [id_ubicacion], references: [id_ubicacion])
+
+  @@index([id_articulo])
+  @@index([id_programacion])
+  @@index([id_ubicacion])
+}
+
+model Ubicacion {
+  id_ubicacion   Int        @id @default(autoincrement())
+  id_articulo    Int
+  zona           String
+  pasillo        String
+  columna        String
+  nivel          String
+  posicion       String
+  cantidad_stock Int        @default(0)
+  activo         Boolean    @default(true)
+  predeterminado Boolean    @default(false)
+  sucursal       Int?
+  Detalle_Conteo Detalle_Conteo[]
+  Articulo       Articulo   @relation(fields: [id_articulo], references: [id_articulo])
+}

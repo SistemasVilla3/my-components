@@ -1,0 +1,24 @@
+{
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "netlify build",
+    "start": "netlify serve",
+    "db:local": "cross-env PRISMA_SCHEMA=./prisma/schema.sqlite.prisma prisma migrate dev",
+    "db:local:seed": "cross-env PRISMA_SCHEMA=./prisma/schema.sqlite.prisma prisma db seed",
+    "db:pg": "cross-env PRISMA_SCHEMA=./prisma/schema.postgres.prisma prisma migrate deploy",
+    "db:pg:seed": "cross-env PRISMA_SCHEMA=./prisma/schema.postgres.prisma prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node --esm prisma/seed.ts"
+  },
+  "devDependencies": {
+    "prisma": "^5.17.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.17.0",
+    "fastify": "^4.28.1"
+  }
+}

@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@theme {
+  /* colores -> usarás bg-brand-red, text-brand-gray, etc. */
+  --color-brand-red:    #D7282F;
+  --color-brand-gray:   #53575A;
+  --color-brand-yellow: #FAC93D;
+  --color-brand-blue:   #3D7CC9;
+  --color-brand-green:  #76BC21;
+  --color-brand-black:  #222222;
+  --color-brand-white:  #FFC844;
+
+  /* extras que usaste en las cards */
+  --shadow-card: 0 6px 20px rgba(0,0,0,.08);  /* class: shadow-card */
+  --radius-xl2:  1rem;                        /* class: rounded-xl2 */
+}
+
+:root {
+	font-family: system-ui, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	color-scheme: light dark;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+main {
+	line-height: 1.6;
+	margin: 0;
+}
+
+.header-container {
+	display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;              /* 64 px ≈ h-16 */
+  border-bottom: 3px solid #800000;
+}
+
+.logo {
+	height: 60px;
+	width: auto;
+}
+
+.titulo {
+	font-size: 1.75rem;
+	font-weight: 600;
+	color: #800000;
+	margin-left: 0.75rem;
+	text-align: right;
+	flex-grow: 1;
+}
+
+.panel {
+	width: 100%;
+	gap: 20px;
+	align-items: flex;
+}
+
+label {
+	margin-bottom: 5px;
+	font-weight: bold;
+	color: #000;
+}
