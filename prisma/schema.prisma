@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model articulos {
+  id              Int            @id @default(autoincrement())
+  sku             String         @unique @db.VarChar(50)
+  descripcion     String
+  marca_id        Int?
+  departamento_id Int?
+  subcategoria_id Int?
+  activo          Boolean?       @default(true)
+  departamentos   departamentos? @relation(fields: [departamento_id], references: [id], onUpdate: NoAction)
+  marcas          marcas?        @relation(fields: [marca_id], references: [id], onUpdate: NoAction)
+  subcategorias   subcategorias? @relation(fields: [subcategoria_id], references: [id], onUpdate: NoAction)
+}
+
+model departamentos {
+  id        Int         @id @default(autoincrement())
+  nombre    String      @unique @db.VarChar(100)
+  articulos articulos[]
+}
+
+model marcas {
+  id            Int             @id @default(autoincrement())
+  nombre        String          @unique @db.VarChar(100)
+  articulos     articulos[]
+  subcategorias subcategorias[]
+}
+
+model subcategorias {
+  id        Int         @id @default(autoincrement())
+  nombre    String      @db.VarChar(100)
+  marca_id  Int?
+  articulos articulos[]
+  marcas    marcas?     @relation(fields: [marca_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model sucursales {
+  id        Int      @id @default(autoincrement())
+  nombre    String   @db.VarChar(100)
+  ciudad    String   @db.VarChar(100)
+  direccion String   @db.VarChar(255)
+  telefono  String?  @db.VarChar(20)
+  activo    Boolean? @default(true)
+}

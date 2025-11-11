@@ -1,5 +1,14 @@
 export type EstadoConteo = 'Programado' | 'Completado' | 'Cancelado';
 
+export type PaginationInput = {
+  limit?: string | number;
+  page?: string | number;
+};
+
+export type MarcaSearchQuery = PaginationInput & {
+  q?: string;
+};
+
 export type Sucursal = {
   id_sucursal: number;
   nombre: string;
@@ -49,7 +58,7 @@ export type Articulo = {
   activo: boolean;
   Marca?: Marca;
   Departamento?: Departamento;
-  SubCategoria?: SubCategoria | null;
+  SubCategoria?: SubCategoria;
 };
 
 export type Ubicacion = {
