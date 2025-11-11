@@ -13,8 +13,3 @@
   command = "npm run dev:web"
   targetPort = 5173
   port = 8888
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
